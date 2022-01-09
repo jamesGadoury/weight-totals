@@ -3,7 +3,7 @@ import logging
 from itertools import combinations
 
 
-def weight_totals(plate_pair_weights):
+def plate_weight_totals(plate_pair_weights):
     logger = logging.getLogger('main')
     logger.debug(f'weight_totals called with plate_pair_weights={plate_pair_weights}')
 
@@ -14,12 +14,19 @@ def weight_totals(plate_pair_weights):
     return weight_totals
 
 
-def main(plate_pair_weights):
+def main(plate_pair_weights, bar_weight):
     logger = logging.getLogger('main')
-    logger.debug(f'main called with plate_pair_weights={plate_pair_weights}')
+    logger.debug(f'main called with plate_pair_weights={plate_pair_weights}, bar_weight={bar_weight}')
 
-    totals = [str(total) for total in weight_totals(plate_pair_weights)]
-    print(f'Possible total weight amounts with available plates: {", ".join(totals)}')
+    plate_totals = plate_weight_totals(plate_pair_weights)
+    plate_totals_str = ', '.join([str(total) for total in plate_totals])
+
+    print(f'Possible total plate weight amounts with available plates: {plate_totals_str}')
+
+    totals_with_bar = [plate_total + bar_weight for plate_total in plate_totals]
+    totals_with_bar_str = ', '.join([str(total) for total in totals_with_bar])
+
+    print(f'Possible total weight amounts (including bar) with available plates: {totals_with_bar_str}')
 
 
 if __name__ == '__main__':
@@ -31,6 +38,7 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser.add_argument('plate_pair_weights', type=int, nargs='*', help='weights representing different pairs of plates')
+    parser.add_argument('--bar', type=int, default=45)
     args = parser.parse_args()
 
-    main(args.plate_pair_weights)
+    main(args.plate_pair_weights, args.bar)
