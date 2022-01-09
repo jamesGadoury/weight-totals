@@ -7,11 +7,11 @@ def plate_weight_totals(plate_pair_weights):
     logger = logging.getLogger('main')
     logger.debug(f'weight_totals called with plate_pair_weights={plate_pair_weights}')
 
-    weight_totals = []
+    weight_totals = set()
     for number_pairs in range(1, len(plate_pair_weights)+1):
         for pair_combos in combinations(plate_pair_weights, number_pairs):
-            weight_totals.append(sum([2 * pair_weight for pair_weight in pair_combos]))
-    return weight_totals
+            weight_totals.add(sum([2 * pair_weight for pair_weight in pair_combos]))
+    return sorted(weight_totals)
 
 
 def main(plate_pair_weights, bar_weight):
@@ -37,8 +37,8 @@ if __name__ == '__main__':
     logger.addHandler(handler)
 
     parser = ArgumentParser()
-    parser.add_argument('plate_pair_weights', type=int, nargs='*', help='weights representing different pairs of plates')
-    parser.add_argument('--bar', type=int, default=45)
+    parser.add_argument('plate_pair_weights', type=float, nargs='*', help='weights representing different pairs of plates')
+    parser.add_argument('--bar', type=float, default=45)
     args = parser.parse_args()
 
     main(args.plate_pair_weights, args.bar)
